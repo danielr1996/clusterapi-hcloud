@@ -1,0 +1,7 @@
+- create helm chart
+- template and overrides
+- values
+    - region
+    - machine types
+    - kubernetes version
+- create secret from helm chart
