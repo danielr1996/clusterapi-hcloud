@@ -1,0 +1,10 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HCloudMachineTemplate
+metadata:
+  name: {{ include "hcloud-clusterapi.fullname" . }}-md
+spec:
+  template:
+    spec:
+      imageName: {{ .Values.hcloud.worker.image }}
+      placementGroupName: md-0
+      type: {{ .Values.hcloud.worker.type }}

@@ -1,0 +1,21 @@
+nameOverride: ""
+fullnameOverride: ""
+hcloud:
+  region: ""
+  token: ""
+  sshkeyname: ""
+  worker:
+    image: ubuntu-22.04
+    type: ""
+  controlplane:
+    image: ubuntu-22.04
+    type: ""
+  csi:
+    encryptionpassphrase: ""
+controlplane:
+  replicas: 3
+machinedeployment:
+  replicas: 3
+cluster:
+  version: 1.25.2
+  name: ""

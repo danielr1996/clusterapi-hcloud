@@ -1,0 +1,14 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: flannel
+spec:
+  clusterSelector:
+    matchLabels:
+      cni: flannel
+  repoURL: https://flannel-io.github.io/flannel/
+  chartName: flannel
+  namespace: kube-system
+  options:
+    install:
+      createNamespace: true

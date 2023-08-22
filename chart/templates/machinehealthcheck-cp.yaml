@@ -1,0 +1,22 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineHealthCheck
+metadata:
+  name: {{ include "hcloud-clusterapi.fullname" . }}-cp
+spec:
+  clusterName: {{ .Values.cluster.name }}
+  maxUnhealthy: 100%
+  nodeStartupTimeout: 15m
+  remediationTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+    kind: HCloudRemediationTemplate
+    name: {{ include "hcloud-clusterapi.fullname" . }}-cp
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/control-plane: ""
+  unhealthyConditions:
+  - status: Unknown
+    timeout: 180s
+    type: Ready
+  - status: "False"
+    timeout: 180s
+    type: Ready

@@ -1,0 +1,29 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineDeployment
+metadata:
+  labels:
+    nodepool: {{ include "hcloud-clusterapi.fullname" . }}-md
+  name: {{ include "hcloud-clusterapi.fullname" . }}
+  namespace: default
+spec:
+  clusterName: {{ .Values.cluster.name }}
+  replicas: {{ .Values.machinedeployment.replicas }}
+  selector:
+    matchLabels: null
+  template:
+    metadata:
+      labels:
+        nodepool: {{ include "hcloud-clusterapi.fullname" . }}-md
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
+          kind: KubeadmConfigTemplate
+          name: {{ include "hcloud-clusterapi.fullname" . }}
+      clusterName: {{ .Values.cluster.name }}
+      failureDomain: {{ .Values.hcloud.region }}
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+        kind: HCloudMachineTemplate
+        name: {{ include "hcloud-clusterapi.fullname" . }}-md
+      version: {{ .Values.cluster.version }}

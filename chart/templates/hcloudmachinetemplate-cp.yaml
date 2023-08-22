@@ -1,0 +1,10 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HCloudMachineTemplate
+metadata:
+  name: {{ include "hcloud-clusterapi.fullname" . }}-cp
+spec:
+  template:
+    spec:
+      imageName: {{ .Values.hcloud.controlplane.image }}
+      placementGroupName: control-plane
+      type: {{ .Values.hcloud.controlplane.type }}

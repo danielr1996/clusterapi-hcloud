@@ -5,3 +5,6 @@
     - machine types
     - kubernetes version
 - create secret from helm chart
+- template EncryptionConfiguration
+- provision secret to workload cluster
+- make it work with arm cp nodes

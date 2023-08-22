@@ -1,0 +1,6 @@
+1. See the status of the cluster by running:
+clusterctl describe cluster {{ include "hcloud-clusterapi.fullname" . }}
+
+2. Use the cluster by exporting the kubeconfig and running a command
+clusterctl get kubeconfig {{ include "hcloud-clusterapi.fullname" . }} > ~/.kube/{{ include "hcloud-clusterapi.fullname" . }}
+KUBECONFIG=~/.kube/{{ include "hcloud-clusterapi.fullname" . }} kubectl get pods -A

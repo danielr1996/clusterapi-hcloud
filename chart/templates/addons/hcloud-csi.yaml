@@ -1,0 +1,90 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: hcloud-csi
+spec:
+  clusterSelector:
+    matchLabels:
+      csi: hetzner
+  repoURL: https://charts.syself.com
+  chartName: csi-hcloud
+  namespace: kube-system
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    storageClasses:
+    - name: hcloud
+      defaultStorageClass: true
+      reclaimPolicy: Delete
+    controller:
+      hcloudToken:
+        value: {{ .Values.hcloud.token }}
+      image:
+        hcloudCSIDriver:
+          tag: v2.3.2
+    node:
+      image:
+        hcloudCSIDriver:
+          tag: v2.3.2
+    extraDeploy:
+      - |
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: encryption-secret
+          namespace: kube-system
+        stringData:
+          encryption-passphrase: foobar
+      - |
+        apiVersion: storage.k8s.io/v1
+        kind: StorageClass
+        metadata:
+          name: hcloud-encrypted
+        provisioner: csi.hetzner.cloud
+        reclaimPolicy: Delete
+        volumeBindingMode: WaitForFirstConsumer
+        allowVolumeExpansion: true
+        parameters:
+          csi.storage.k8s.io/node-publish-secret-name: encryption-secret
+          csi.storage.k8s.io/node-publish-secret-namespace: kube-system
+---
+apiVersion: addons.cluster.x-k8s.io/v1beta1
+kind: ClusterResourceSet
+metadata:
+ name: hcloud-csi-encrypted
+spec:
+ strategy: "Reconcile"
+ clusterSelector:
+   matchLabels:
+     csi: hetzner
+ resources:
+   - name: encrypted-storageclass
+     kind: Secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: encrypted-storageclass
+type: addons.cluster.x-k8s.io/resource-set
+stringData:
+  secret.yaml: |-
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: encryption-secret
+      namespace: kube-system
+    stringData:
+      encryption-passphrase: {{ .Values.hcloud.csi.encryptionpassphrase }}
+    --- 
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: hcloud-encrypted
+    provisioner: csi.hetzner.cloud
+    reclaimPolicy: Delete
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    parameters:
+      csi.storage.k8s.io/node-publish-secret-name: encryption-secret
+      csi.storage.k8s.io/node-publish-secret-namespace: kube-system
