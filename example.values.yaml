@@ -1,0 +1,20 @@
+fullnameOverride: example-cluster
+hcloud:
+  region: fsn1
+  token: ""
+  sshkeyname: ""
+  worker:
+    image: ubuntu-22.04
+    type: cax11
+  controlplane:
+    image: ubuntu-22.04
+    type: cpx11
+  csi:
+    encryptionpassphrase: "..."
+controlplane:
+  replicas: 3
+machinedeployment:
+  replicas: 5
+cluster:
+  version: 1.25.2
+  name: example-cluster

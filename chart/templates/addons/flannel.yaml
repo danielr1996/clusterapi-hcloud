@@ -9,6 +9,10 @@ spec:
   repoURL: https://flannel-io.github.io/flannel/
   chartName: flannel
   namespace: kube-system
+  version: "v0.22.1"
+  releaseName: flannel
   options:
     install:
       createNamespace: true
+  valuesTemplate: |
+    fullnameOverride: cni-flannel

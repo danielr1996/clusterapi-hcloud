@@ -1,2 +1,4 @@
 .env
-dke-*-yaml
+dke-*.yaml
+test.yaml
+dist/

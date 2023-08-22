@@ -12,12 +12,64 @@ spec:
   options:
     install:
       createNamespace: true
+  version: "1.0.1"
+  releaseName: hcloud-csi
   valuesTemplate: |
+    fullnameOverride: hetzner-csi
     storageClasses:
     - name: hcloud
       defaultStorageClass: true
       reclaimPolicy: Delete
+      allowVolumeExpansion: true
     controller:
+      hcloudVolumeDefaultLocation: fsn1
+      priorityClassName: system-cluster-critical
+      resources:
+        csiAttacher:
+          limits:
+            memory: 80Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 10m
+        csiResizer:
+          limits:
+            memory: 80Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 10m
+        csiProvisioner:
+          limits:
+            memory: 80Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 10m
+        livenessProbe:
+          limits:
+            memory: 80Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 10m
+        hcloudCSIDriver:
+          limits:
+            memory: 80Mi
+            cpu: 50m
+          requests:
+            memory: 20Mi
+            cpu: 10m
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: csi-hcloud
+                operator: In
+                values:
+                - controller
+            topologyKey: "kubernetes.io/hostname"
       hcloudToken:
         value: {{ .Values.hcloud.token }}
       image:
@@ -27,6 +79,43 @@ spec:
       image:
         hcloudCSIDriver:
           tag: v2.3.2
+      priorityClassName: "system-node-critical"
+      resources:
+        CSINodeDriverRegistrar:
+          limits: 
+            memory: 40Mi
+            cpu: 50m
+          requests: 
+            memory: 20Mi
+            cpu: 10m
+        livenessProbe:
+          limits: 
+            memory: 40Mi
+            cpu: 50m
+          requests: 
+            memory: 20Mi
+            cpu: 10m
+        hcloudCSIDriver:
+          limits:
+            memory: 80Mi
+            cpu: 100m
+          requests: 
+            memory: 40Mi
+            cpu: 10m
+      hostNetwork: true
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "node-role.kubernetes.io/control-plane"
+                operator: NotIn
+                values:
+                - ""
+              - key: "instance.hetzner.cloud/is-root-server"
+                operator: NotIn
+                values:
+                - "true"
     extraDeploy:
       - |
         apiVersion: v1
@@ -35,7 +124,7 @@ spec:
           name: encryption-secret
           namespace: kube-system
         stringData:
-          encryption-passphrase: foobar
+          encryption-passphrase: {{ .Values.hcloud.csi.encryptionpassphrase }}
       - |
         apiVersion: storage.k8s.io/v1
         kind: StorageClass
@@ -48,43 +137,3 @@ spec:
         parameters:
           csi.storage.k8s.io/node-publish-secret-name: encryption-secret
           csi.storage.k8s.io/node-publish-secret-namespace: kube-system
----
-apiVersion: addons.cluster.x-k8s.io/v1beta1
-kind: ClusterResourceSet
-metadata:
- name: hcloud-csi-encrypted
-spec:
- strategy: "Reconcile"
- clusterSelector:
-   matchLabels:
-     csi: hetzner
- resources:
-   - name: encrypted-storageclass
-     kind: Secret
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: encrypted-storageclass
-type: addons.cluster.x-k8s.io/resource-set
-stringData:
-  secret.yaml: |-
-    apiVersion: v1
-    kind: Secret
-    metadata:
-      name: encryption-secret
-      namespace: kube-system
-    stringData:
-      encryption-passphrase: {{ .Values.hcloud.csi.encryptionpassphrase }}
-    --- 
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: hcloud-encrypted
-    provisioner: csi.hetzner.cloud
-    reclaimPolicy: Delete
-    volumeBindingMode: WaitForFirstConsumer
-    allowVolumeExpansion: true
-    parameters:
-      csi.storage.k8s.io/node-publish-secret-name: encryption-secret
-      csi.storage.k8s.io/node-publish-secret-namespace: kube-system

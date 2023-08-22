@@ -9,9 +9,13 @@ spec:
   repoURL: https://charts.hetzner.cloud
   chartName: hcloud-cloud-controller-manager
   namespace: kube-system
+  version: "v1.17.2"
+  releaseName: hccm
   options:
     install:
       createNamespace: true
+  valuesTemplate: |
+    fullnameOverride: ccm-hetzner
 ---
 apiVersion: addons.cluster.x-k8s.io/v1beta1
 kind: ClusterResourceSet

@@ -26,4 +26,4 @@ spec:
         apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
         kind: HCloudMachineTemplate
         name: {{ include "hcloud-clusterapi.fullname" . }}-md
-      version: {{ .Values.cluster.version }}
+      version: {{ .Values.machinedeployment.version }}

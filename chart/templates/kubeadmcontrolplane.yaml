@@ -49,7 +49,7 @@ spec:
           cluster-signing-duration: 6h0m0s
           cluster-signing-key-file: /etc/kubernetes/pki/ca.key
           kubeconfig: /etc/kubernetes/controller-manager.conf
-          pod-eviction-timeout: 2m
+          # pod-eviction-timeout: 2m
           profiling: "false"
           requestheader-client-ca-file: /etc/kubernetes/pki/front-proxy-ca.crt
           root-ca-file: /etc/kubernetes/pki/ca.crt
@@ -173,9 +173,11 @@ spec:
           tls-cipher-suites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
     preKubeadmCommands:
     - set -x
-    - export CRUN=1.8.5
-    - export CONTAINERD=1.7.2
-    - export KUBERNETES_VERSION=$(echo {{ .Values.cluster.version }} | sed 's/^v//')
+    - export CRUN={{ .Values.controlplane.crunversion }}
+    - export CONTAINERD={{ .Values.controlplane.containerdversion }}
+    - export KUBERNETES_VERSION=$(echo {{ .Values.controlplane.version }} | sed 's/^v//')
+    - ARCH=amd64
+    - if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; fi
     - localectl set-locale LANG=en_US.UTF-8
     - localectl set-locale LANGUAGE=en_US.UTF-8
     - apt-get update -y
@@ -183,12 +185,12 @@ spec:
     - sed -i '/swap/d' /etc/fstab
     - swapoff -a
     - modprobe overlay && modprobe br_netfilter && sysctl --system
-    - wget https://github.com/containerd/containerd/releases/download/v$CONTAINERD/cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz
-    - wget https://github.com/containerd/containerd/releases/download/v$CONTAINERD/cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz.sha256sum
-    - sha256sum --check cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz.sha256sum
-    - tar --no-overwrite-dir -C / -xzf cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz
-    - rm -f cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz cri-containerd-cni-$CONTAINERD-linux-amd64.tar.gz.sha256sum
-    - wget https://github.com/containers/crun/releases/download/$CRUN/crun-$CRUN-linux-amd64
+    - wget https://github.com/containerd/containerd/releases/download/v$CONTAINERD/cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz
+    - wget https://github.com/containerd/containerd/releases/download/v$CONTAINERD/cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz.sha256sum
+    - sha256sum --check cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz.sha256sum
+    - tar --no-overwrite-dir -C / -xzf cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz
+    - rm -f cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz cri-containerd-cni-$CONTAINERD-linux-$ARCH.tar.gz.sha256sum
+    - wget https://github.com/containers/crun/releases/download/$CRUN/crun-$CRUN-linux-$ARCH
       -O /usr/local/sbin/crun && chmod +x /usr/local/sbin/crun
     - rm -f /etc/cni/net.d/10-containerd-net.conflist
     - chmod -R 644 /etc/cni && chown -R root:root /etc/cni
@@ -210,4 +212,4 @@ spec:
       kind: HCloudMachineTemplate
       name: {{ include "hcloud-clusterapi.fullname" . }}-cp
   replicas: {{ .Values.controlplane.replicas }}
-  version: {{ .Values.cluster.version }}
+  version: {{ .Values.controlplane.version }}

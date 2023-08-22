@@ -74,9 +74,9 @@ spec:
             tls-cipher-suites: TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
       preKubeadmCommands:
       - set -x
-      - export CRUN=1.8.5
-      - export CONTAINERD=1.7.2
-      - export KUBERNETES_VERSION=$(echo {{ .Values.cluster.version }} | sed 's/^v//')
+      - export CRUN={{ .Values.machinedeployment.crunversion }}
+      - export CONTAINERD={{ .Values.machinedeployment.containerdversion }}
+      - export KUBERNETES_VERSION=$(echo {{ .Values.machinedeployment.version }} | sed 's/^v//')
       - ARCH=amd64
       - if [ "$(uname -m)" = "aarch64" ]; then ARCH=arm64; fi
       - localectl set-locale LANG=en_US.UTF-8

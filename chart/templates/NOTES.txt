@@ -1,6 +1,10 @@
-1. See the status of the cluster by running:
-clusterctl describe cluster {{ include "hcloud-clusterapi.fullname" . }}
+🔥 Congratulations, your cluster should be up in a few minutes 🚀
 
-2. Use the cluster by exporting the kubeconfig and running a command
-clusterctl get kubeconfig {{ include "hcloud-clusterapi.fullname" . }} > ~/.kube/{{ include "hcloud-clusterapi.fullname" . }}
-KUBECONFIG=~/.kube/{{ include "hcloud-clusterapi.fullname" . }} kubectl get pods -A
+You can check the status of your cluster with 
+    clusterctl describe cluster {{ include "hcloud-clusterapi.fullname" . }}
+
+As soon as the ControlPlane status is True you can grab the kubeconfig without
+    clusterctl get kubeconfig {{ include "hcloud-clusterapi.fullname" . }} > ~/.kube/{{ include "hcloud-clusterapi.fullname" . }}
+
+For a quick sanity check run 
+    KUBECONFIG=~/.kube/{{ include "hcloud-clusterapi.fullname" . }} kubectl get pods -A

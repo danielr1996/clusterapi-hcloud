@@ -1,10 +1,16 @@
-- create helm chart
-- template and overrides
-- values
-    - region
-    - machine types
-    - kubernetes version
-- create secret from helm chart
-- template EncryptionConfiguration
-- provision secret to workload cluster
-- make it work with arm cp nodes
+- template encryptionconfig
+- different version for kontrolpane and md
+- add netdata monitoring and logging
+- Upgrading Kubernetes Version
+- Managing cluster from itself
+- Upgrading cp and w flavor
+- destroy machines
+- poweroff machines
+- day 2 ops
+- chaos engineering
+- scaling up and down
+- delete kind, restore from backup
+- get rid of kubeadm
+- set resources for all pods
+
+- 1.28/1.27 probably pod eviction timeout of kube controller manager extra args is the problem
