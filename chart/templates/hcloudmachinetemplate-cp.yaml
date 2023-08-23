@@ -1,7 +1,7 @@
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HCloudMachineTemplate
 metadata:
-  name: {{ include "hcloud-clusterapi.fullname" . }}-cp
+  name: {{ include "hcloud-clusterapi.fullname" . }}-cp-{{ .Values.hcloud.controlplane.type }}
 spec:
   template:
     spec:

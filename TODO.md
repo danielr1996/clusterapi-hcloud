@@ -1,16 +1,8 @@
-- template encryptionconfig
-- different version for kontrolpane and md
-- add netdata monitoring and logging
-- Upgrading Kubernetes Version
-- Managing cluster from itself
-- Upgrading cp and w flavor
-- destroy machines
-- poweroff machines
-- day 2 ops
-- chaos engineering
-- scaling up and down
+- addons
+    - netdata
+    - prometheus
+    - grafana / elasticsearch
+    - loki / fluentd
+- replace kubeadm controlplane with a something that doesn't require provisioning machines with shell scripts
 - delete kind, restore from backup
-- get rid of kubeadm
 - set resources for all pods
-
-- 1.28/1.27 probably pod eviction timeout of kube controller manager extra args is the problem
