@@ -1,0 +1,92 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: cert-manager
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      ingresscontroller: enabled
+  repoURL: https://charts.jetstack.io
+  chartName: cert-manager
+  namespace: ingress-system
+  options:
+    install:
+      createNamespace: true
+  version: "1.12.3"
+  releaseName: cert-manager
+  valuesTemplate: |
+    fullnameOverride: cert-manager
+    installCRDs: true
+    extraArgs: ["--acme-http01-solver-nameservers=9.9.9.9:53,1.1.1.1:53"]
+    resources:
+      limits:
+        memory: 100Mi
+        cpu: 300m
+      requests:
+        memory: 100Mi
+        cpu: 300m
+    webhook:
+      resources:
+        limits:
+          memory: 50Mi
+          cpu: 10m
+        requests:
+          memory: 50Mi
+          cpu: 10m
+    cainjector:
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 10m
+        requests:
+          memory: 100Mi
+          cpu: 10m
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: ingress-extra
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      ingresscontroller: enabled
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: cert-manager
+  version: "1.0.0"
+  releaseName: ingress-extra
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+    - apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: letsencrypt-staging
+      spec:
+        acme:
+          server: https://acme-staging-v02.api.letsencrypt.org/directory
+          email: {{ .Values.ingress.issueremail }}
+          privateKeySecretRef:
+            name: letsencrypt-staging-private-key
+          solvers:
+            - http01:
+                ingress: {}
+    - apiVersion: cert-manager.io/v1
+      kind: ClusterIssuer
+      metadata:
+        name: letsencrypt-prod
+      spec:
+        acme:
+          server: https://acme-v02.api.letsencrypt.org/directory
+          email: {{ .Values.ingress.issueremail }}
+          privateKeySecretRef:
+            name: letsencrypt-prod-private-key
+          solvers:
+            - http01:
+                ingress: {}

@@ -1,0 +1,48 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: hccm
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      ccm: hetzner
+  repoURL: https://charts.hetzner.cloud
+  chartName: hcloud-cloud-controller-manager
+  namespace: kube-system
+  version: "v1.17.2"
+  releaseName: hccm
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    fullnameOverride: ccm-hetzner
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: hccm-extra
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      ccm: hetzner
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: kube-system
+  version: "1.0.0"
+  releaseName: hccm-extra
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+    - kind: Secret
+      apiVersion: v1
+      metadata:
+        name: hcloud
+        namespace: kube-system
+      stringData:
+        token: {{ .Values.hcloud.token }}

@@ -3,9 +3,12 @@ kind: Cluster
 metadata:
   name: {{ include "hcloud-clusterapi.fullname" . }}
   labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
     ccm: hetzner
     csi: hetzner
     cni: flannel
+    monitoring: enabled
+    ingresscontroller: enabled
 spec:
   clusterNetwork:
     pods:

@@ -13,6 +13,8 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HCloudMachineTemplate
 metadata:
   name: {{ include "hcloud-clusterapi.fullname" . }}-md-cax21
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
   template:
     spec:

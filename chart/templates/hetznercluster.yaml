@@ -2,6 +2,8 @@ apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
 kind: HetznerCluster
 metadata:
   name: {{ include "hcloud-clusterapi.fullname" . }}
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
   controlPlaneEndpoint:
     host: ""

@@ -1,0 +1,97 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: kube-prometheus
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      monitoring: enabled
+  repoURL: oci://registry-1.docker.io/bitnamicharts
+  chartName: kube-prometheus
+  namespace: monitoring
+  options:
+    install:
+      createNamespace: true
+  version: "8.17.2"
+  releaseName: kube-prometheus
+  valuesTemplate: |
+    fullnameOverride: prometheus
+    coreDns:
+      enabled: false
+    kubeApiServer:
+      enabled: false
+    kubeControllerManager:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+
+    operator:
+      serviceMonitor:
+        enabled: false
+      resources:
+        limits:
+          memory: 200Mi
+          cpu: 20m
+        requests:
+          memory: 200Mi
+          cpu: 20m
+      configReloaderResources:
+        limits:
+          memory: 500Mi
+          cpu: 100m
+        requests:
+          memory: 500Mi
+          cpu: 100m
+    prometheus:
+      serviceMonitor:
+        enabled: false
+      configReloader:
+        serviceMonitor:
+          enabled: false
+      resources:
+        limits:
+          memory: 1500Mi
+          cpu: 500m
+        requests:
+          memory: 1500Mi
+          cpu: 500m
+    alertmanager:
+      enabled: false
+      serviceMonitor:
+        enabled: false
+      resources:
+        limits:
+          memory: 150Mi
+          cpu: 10m
+        requests:
+          memory: 150Mi
+          cpu: 10m
+    blackboxExporter:
+      enabled: false
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 10m
+        requests:
+          memory: 100Mi
+          cpu: 10m
+    node-exporter:
+      resources:
+        limits:
+          memory: 100Mi
+          cpu: 10m
+        requests:
+          memory: 100Mi
+          cpu: 10m
+    kube-state-metrics:
+      resources:
+        limits:
+          memory: 250Mi
+          cpu: 100m
+        requests:
+          memory: 250Mi
+          cpu: 100m

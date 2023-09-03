@@ -1,0 +1,36 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: ingress-nginx
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      ingresscontroller: enabled
+  repoURL: https://kubernetes.github.io/ingress-nginx
+  chartName: ingress-nginx
+  namespace: ingress-system
+  options:
+    install:
+      createNamespace: true
+  version: "4.7.1"
+  releaseName: ingress-nginx
+  valuesTemplate: |
+    fullnameOverride: ingress
+    controller:
+      resources:      
+        limits:
+          cpu: 100m
+          memory: 150Mi
+        requests:
+        cpu: 100m
+        memory: 150Mi
+      service:
+        externalTrafficPolicy: Cluster
+        annotations:
+          load-balancer.hetzner.cloud/location: {{ .Values.hcloud.region }}
+          external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.loadbalancerdnsname }}
+      ingressClassResource:
+        name: 'nginx'
+        default: true

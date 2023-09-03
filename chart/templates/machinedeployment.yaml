@@ -4,7 +4,8 @@ metadata:
   labels:
     nodepool: {{ include "hcloud-clusterapi.fullname" . }}-md
   name: {{ include "hcloud-clusterapi.fullname" . }}
-  namespace: default
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
   clusterName: {{ .Values.cluster.name }}
   replicas: {{ .Values.machinedeployment.replicas }}
@@ -13,6 +14,7 @@ spec:
   template:
     metadata:
       labels:
+        {{- include "hcloud-clusterapi.labels" . | nindent 8 }}
         nodepool: {{ include "hcloud-clusterapi.fullname" . }}-md
     spec:
       bootstrap:

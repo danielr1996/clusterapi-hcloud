@@ -29,3 +29,23 @@ Create chart name and version as used by the chart label.
 {{- define "hcloud-clusterapi.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "hcloud-clusterapi.labels" -}}
+helm.sh/chart: {{ include "hcloud-clusterapi.chart" . }}
+{{ include "hcloud-clusterapi.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "hcloud-clusterapi.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "hcloud-clusterapi.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

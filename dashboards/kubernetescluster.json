@@ -1,0 +1,252 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                },
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 2,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "decbytes"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 2,
+            "options": {
+                "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "9.1.6",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_node_status_capacity{resource=\"memory\"})-sum(kube_node_status_capacity{resource=\"memory\"} * on(node) group_left(role) kube_node_role)\n",
+                    "legendFormat": "Capacity",
+                    "range": true,
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_pod_container_resource_limits{resource=\"memory\"})\n",
+                    "hide": false,
+                    "legendFormat": "Limits",
+                    "range": true,
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_pod_container_resource_requests{resource=\"memory\"})\n",
+                    "hide": false,
+                    "legendFormat": "Requests",
+                    "range": true,
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(container_memory_usage_bytes{container!=\"\"})\n",
+                    "hide": false,
+                    "legendFormat": "Usage",
+                    "range": true,
+                    "refId": "D"
+                }
+            ],
+            "title": "Memory Utilization",
+            "type": "bargauge"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "decimals": 2,
+                    "mappings": [],
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    },
+                    "unit": "cores"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 9,
+                "w": 12,
+                "x": 12,
+                "y": 0
+            },
+            "id": 3,
+            "options": {
+                "displayMode": "basic",
+                "minVizHeight": 10,
+                "minVizWidth": 0,
+                "orientation": "horizontal",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "9.1.6",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_node_status_capacity{resource=\"cpu\"})-sum(kube_node_status_capacity{resource=\"cpu\"} * on(node) group_left(role) kube_node_role)\n",
+                    "legendFormat": "Capacity",
+                    "range": true,
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_pod_container_resource_limits{resource=\"cpu\"})\n",
+                    "hide": false,
+                    "legendFormat": "Limits",
+                    "range": true,
+                    "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(kube_pod_container_resource_requests{resource=\"cpu\"})\n",
+                    "hide": false,
+                    "legendFormat": "Requests",
+                    "range": true,
+                    "refId": "C"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "7799c0a9-be5d-4684-b909-a74a74eb22ee"
+                    },
+                    "editorMode": "code",
+                    "expr": "sum(rate(node_cpu_seconds_total{mode=~\"user|system\"}[1m]))",
+                    "hide": false,
+                    "legendFormat": "Usage",
+                    "range": true,
+                    "refId": "D"
+                }
+            ],
+            "title": "CPU Utilization",
+            "type": "bargauge"
+        }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [
+        "Kubernetes"
+    ],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-2d",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Cluster",
+    "uid": "O0snNJkSz",
+    "version": 5,
+    "weekStart": "monday"
+}
