@@ -22,10 +22,10 @@ spec:
       resources:      
         limits:
           cpu: 100m
-          memory: 150Mi
+          memory: 600Mi
         requests:
         cpu: 100m
-        memory: 150Mi
+        memory: 600Mi
       service:
         externalTrafficPolicy: Cluster
         annotations:

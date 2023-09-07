@@ -82,7 +82,7 @@ spec:
           spec:
             ingressClassName: 'nginx'
             rules:
-            - host: grafana.dani.rip
+            - host: {{ .Values.addons.grafana.domain }}
               http:
                 paths:
                 - backend:
@@ -93,8 +93,8 @@ spec:
                   path: '/'
                   pathType: 'Prefix'
             tls:
-            - hosts: ['grafana.dani.rip']
-              secretName: 'grafana.dani.rip'
+            - hosts: ['{{ .Values.addons.grafana.domain }}']
+              secretName: '{{ .Values.addons.grafana.domain }}'
     - apiVersion: grafana.integreatly.org/v1beta1
       kind: GrafanaDatasource
       metadata:

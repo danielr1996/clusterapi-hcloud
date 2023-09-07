@@ -1,0 +1,21 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: rook-operator
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      addons/rook: enabled
+  repoURL: https://charts.rook.io/release
+  chartName: rook-ceph
+  namespace: rook-ceph 
+  options:
+    install:
+      createNamespace: true
+  version: "1.12.3"
+  releaseName: rook
+  valuesTemplate: |
+    monitoring:
+        enabled: true

@@ -1,0 +1,175 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: rook-cluster
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      addons/rook: enabled
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: rook-ceph
+  version: "1.0.0"
+  releaseName: rook-cluster
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+    - apiVersion: ceph.rook.io/v1
+      kind: CephCluster
+      metadata:
+        name: rook-ceph
+        namespace: rook-ceph # namespace:cluster
+      spec:
+        dataDirHostPath: /var/lib/rook
+        mon:
+          count: 3
+          # allowMultiplePerNode: false
+          volumeClaimTemplate:
+            spec:
+              storageClassName: hcloud-encrypted
+              resources:
+                requests:
+                  storage: 10Gi
+        cephVersion:
+          image: quay.io/ceph/ceph:v17.2.6
+        # skipUpgradeChecks: false
+        # continueUpgradeAfterChecksEvenIfNotHealthy: false
+        mgr:
+          count: 1
+          modules:
+            - name: pg_autoscaler
+              enabled: true
+            - name: rook
+              enabled: true
+        dashboard:
+          enabled: true
+          ssl: false
+        # crashCollector:
+        #   disable: false
+        # logCollector:
+        #   enabled: true
+        #   periodicity: daily # one of: hourly, daily, weekly, monthly
+        #   maxLogSize: 500M # SUFFIX may be 'M' or 'G'. Must be at least 1M.
+        storage:
+          storageClassDeviceSets:
+            - name: set1
+              count: 3
+              portable: true
+              tuneDeviceClass: true
+              tuneFastDeviceClass: false
+              encrypted: false
+              # Since the OSDs could end up on any node, an effort needs to be made to spread the OSDs
+              # across nodes as much as possible. Unfortunately the pod anti-affinity breaks down
+              # as soon as you have more than one OSD per node. The topology spread constraints will
+              # give us an even spread on K8s 1.18 or newer.
+              placement:
+                topologySpreadConstraints:
+                  - maxSkew: 1
+                    topologyKey: kubernetes.io/hostname
+                    whenUnsatisfiable: ScheduleAnyway
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - rook-ceph-osd
+              preparePlacement:
+                podAntiAffinity:
+                  preferredDuringSchedulingIgnoredDuringExecution:
+                    - weight: 100
+                      podAffinityTerm:
+                        labelSelector:
+                          matchExpressions:
+                            - key: app
+                              operator: In
+                              values:
+                                - rook-ceph-osd
+                            - key: app
+                              operator: In
+                              values:
+                                - rook-ceph-osd-prepare
+                        topologyKey: kubernetes.io/hostname
+                topologySpreadConstraints:
+                  - maxSkew: 1
+                    # IMPORTANT: If you don't have zone labels, change this to another key such as kubernetes.io/hostname
+                    topologyKey: topology.kubernetes.io/zone
+                    whenUnsatisfiable: DoNotSchedule
+                    labelSelector:
+                      matchExpressions:
+                        - key: app
+                          operator: In
+                          values:
+                            - rook-ceph-osd-prepare
+              resources:
+                limits:
+                  cpu: "500m"
+                  memory: "4Gi"
+                requests:
+                  cpu: "500m"
+                  memory: "4Gi"
+              volumeClaimTemplates:
+                - metadata:
+                    name: data
+                    # if you are looking at giving your OSD a different CRUSH device class than the one detected by Ceph
+                    # annotations:
+                    #   crushDeviceClass: hybrid
+                  spec:
+                    resources:
+                      requests:
+                        storage: 10Gi
+                    storageClassName: hcloud-encrypted
+                    volumeMode: Block
+                    accessModes:
+                      - ReadWriteOnce
+              # dedicated block device to store bluestore database (block.db)
+              # - metadata:
+              #     name: metadata
+              #   spec:
+              #     resources:
+              #       requests:
+              #         # Find the right size https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#sizing
+              #         storage: 5Gi
+              #     # IMPORTANT: Change the storage class depending on your environment
+              #     storageClassName: io1
+              #     volumeMode: Block
+              #     accessModes:
+              #       - ReadWriteOnce
+              # dedicated block device to store bluestore wal (block.wal)
+              # - metadata:
+              #     name: wal
+              #   spec:
+              #     resources:
+              #       requests:
+              #         # Find the right size https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#sizing
+              #         storage: 5Gi
+              #     # IMPORTANT: Change the storage class depending on your environment
+              #     storageClassName: io1
+              #     volumeMode: Block
+              #     accessModes:
+              #       - ReadWriteOnce
+              # Scheduler name for OSD pod placement
+              # schedulerName: osd-scheduler
+          # when onlyApplyOSDPlacement is false, will merge both placement.All() and storageClassDeviceSets.Placement.
+          onlyApplyOSDPlacement: false
+        resources:
+        prepareosd:
+          limits:
+            cpu: "200m"
+            memory: "200Mi"
+          requests:
+            cpu: "200m"
+            memory: "200Mi"
+        priorityClassNames:
+          # If there are multiple nodes available in a failure domain (e.g. zones), the
+          # mons and osds can be portable and set the system-cluster-critical priority class.
+          mon: system-node-critical
+          osd: system-node-critical
+          mgr: system-cluster-critical
+        disruptionManagement:
+          managePodBudgets: true
+          osdMaintenanceTimeout: 30
+          pgHealthCheckTimeout: 0

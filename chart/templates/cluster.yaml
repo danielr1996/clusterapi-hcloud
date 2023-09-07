@@ -9,6 +9,7 @@ metadata:
     cni: flannel
     monitoring: enabled
     ingresscontroller: enabled
+    addons/rook: enabled
 spec:
   clusterNetwork:
     pods:

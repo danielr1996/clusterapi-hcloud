@@ -3,7 +3,7 @@
 You can check the status of your cluster with 
     clusterctl describe cluster -n {{ .Release.Namespace }} {{ include "hcloud-clusterapi.fullname" . }}
 
-As soon as the ControlPlane status is True you can grab the kubeconfig without
+As soon as the ControlPlane status is True you can grab the kubeconfig with
     clusterctl get kubeconfig  -n {{ .Release.Namespace }} {{ include "hcloud-clusterapi.fullname" . }} > ~/.kube/{{ include "hcloud-clusterapi.fullname" . }}
 
 For a quick sanity check run 

@@ -1,0 +1,44 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: rook-ingress
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      addons/rook: enabled
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: rook-ceph
+  version: "1.0.0"
+  releaseName: rook-ingress
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+      - apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: rook-ceph-mgr-dashboard
+          namespace: rook-ceph
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+        spec:
+          ingressClassName: "nginx"
+          tls:
+          - hosts:
+            - rook.dani.rip
+            secretName: rook.dani.rip
+          rules:
+          - host: rook.dani.rip
+            http:
+              paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: rook-ceph-mgr-dashboard
+                    port:
+                      name: http-dashboard

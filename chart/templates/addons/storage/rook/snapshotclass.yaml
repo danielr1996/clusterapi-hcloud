@@ -1,0 +1,30 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: rook-snapshotclass
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      addons/rook: enabled
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: rook-ceph
+  version: "1.0.0"
+  releaseName: rook-snapshotclass
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+      - apiVersion: snapshot.storage.k8s.io/v1
+        kind: VolumeSnapshotClass
+        metadata:
+          name: csi-rbdplugin-snapclass
+        driver: rook-ceph.rbd.csi.ceph.com
+        parameters:
+          clusterID: rook-ceph
+          csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
+          csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
+        deletionPolicy: Delete

@@ -20,7 +20,7 @@ spec:
     fullnameOverride: hetzner-csi
     storageClasses:
     - name: hcloud
-      defaultStorageClass: true
+      defaultStorageClass: false
       reclaimPolicy: Delete
       allowVolumeExpansion: true
     controller:

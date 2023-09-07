@@ -21,3 +21,16 @@ spec:
       imageName: {{ .Values.hcloud.worker.image }}
       placementGroupName: md-0
       type: cax21
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta1
+kind: HCloudMachineTemplate
+metadata:
+  name: {{ include "hcloud-clusterapi.fullname" . }}-md-cax31
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      imageName: {{ .Values.hcloud.worker.image }}
+      placementGroupName: md-0
+      type: cax31
