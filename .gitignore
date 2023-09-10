@@ -3,3 +3,4 @@ dke-*.yaml
 test.yaml
 dist/
 temp/
+tools/backblaze.ini
