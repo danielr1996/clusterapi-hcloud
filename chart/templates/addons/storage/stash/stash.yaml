@@ -1,0 +1,24 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: stash
+  labels:
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      addons/backup: enabled
+  repoURL: https://charts.appscode.com/stable/
+  chartName: stash
+  namespace: stash
+  version: "v2023.08.18"
+  releaseName: stash
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    global:
+        license: |{{ .Values.addons.backup.stashlicensekey | nindent 12}}
+    fullnameOverride: stash
+    features:
+        community: true
