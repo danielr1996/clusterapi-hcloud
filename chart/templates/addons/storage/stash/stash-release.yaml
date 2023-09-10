@@ -1,7 +1,7 @@
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
 metadata:
-  name: stash
+  name: stash-release
   labels:
     {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
@@ -12,7 +12,7 @@ spec:
   chartName: stash
   namespace: stash
   version: "v2023.08.18"
-  releaseName: stash
+  releaseName: stash-release
   options:
     install:
       createNamespace: true

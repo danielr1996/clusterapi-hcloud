@@ -29,10 +29,10 @@ spec:
           ingressClassName: "nginx"
           tls:
           - hosts:
-            - rook.dani.rip
-            secretName: rook.dani.rip
+            - {{ .Values.addons.rook.domain }}
+            secretName: {{ .Values.addons.rook.domain }}
           rules:
-          - host: rook.dani.rip
+          - host: {{ .Values.addons.rook.domain }}
             http:
               paths:
               - path: /

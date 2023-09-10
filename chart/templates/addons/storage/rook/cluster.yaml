@@ -33,7 +33,7 @@ spec:
               storageClassName: hcloud-encrypted
               resources:
                 requests:
-                  storage: 10Gi
+                  storage: {{ .Values.addons.rook.monsize }}
         cephVersion:
           image: quay.io/ceph/ceph:v17.2.6
         # skipUpgradeChecks: false
@@ -57,7 +57,7 @@ spec:
         storage:
           storageClassDeviceSets:
             - name: set1
-              count: 3
+              count:  {{ .Values.addons.rook.osdcount }}
               portable: true
               tuneDeviceClass: true
               tuneFastDeviceClass: false
@@ -120,7 +120,7 @@ spec:
                   spec:
                     resources:
                       requests:
-                        storage: 10Gi
+                        storage:  {{ .Values.addons.rook.osdsize }}
                     storageClassName: hcloud-encrypted
                     volumeMode: Block
                     accessModes:
