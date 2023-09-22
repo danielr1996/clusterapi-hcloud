@@ -4,3 +4,4 @@ test.yaml
 dist/
 temp/
 tools/backblaze.ini
+drc-prod.yaml
