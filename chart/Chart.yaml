@@ -2,5 +2,5 @@ apiVersion: v2
 name: clusterapi-hcloud
 description: A Helm chart to deploy a clusterapi managed cluster on hcloud
 type: application
-version: 1.0.0-beta.4
-appVersion: "1.0.0-beta4"
+version: 1.0.0-beta.5
+appVersion: "1.0.0-beta5"

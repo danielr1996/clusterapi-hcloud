@@ -22,7 +22,6 @@ spec:
         kind: Secret
         metadata:
           name: b2-secret
-          labels:
         type: Opaque
         stringData:
             RESTIC_PASSWORD: {{ .Values.addons.backup.password }}

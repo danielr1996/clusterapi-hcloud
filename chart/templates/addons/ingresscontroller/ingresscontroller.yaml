@@ -19,6 +19,8 @@ spec:
   valuesTemplate: |
     fullnameOverride: ingress
     controller:
+      extraArgs:
+        enable-ssl-passthrough: true
       resources:      
         limits:
           cpu: 100m
