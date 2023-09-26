@@ -1,20 +1,36 @@
 fullnameOverride: example-cluster
 hcloud:
-  region: fsn1
-  token: ""
-  sshkeyname: ""
-  worker:
-    image: ubuntu-22.04
-    type: cax11
-  controlplane:
-    image: ubuntu-22.04
-    type: cpx11
+  token: 
   csi:
-    encryptionpassphrase: "..."
+    # Random String
+    encryptionpassphrase: 
+  worker:
+    type: cax31
 controlplane:
-  replicas: 3
+  replicas: 1
+  # head -c 32 /dev/urandom | base64
+  encryptionpassphrase:
 machinedeployment:
-  replicas: 5
+  replicas: 3
 cluster:
-  version: 1.25.2
   name: example-cluster
+ingress:
+  loadbalancerdnsname: example-cluster.example.com  
+  txtownerid: example-cluster
+  domainFilters: []
+  #- 'example.com'
+addons:
+  grafana:
+    domain: grafana.example.com
+    username: 
+    password: 
+  rook:
+    monsize: 10Gi
+    osdsize: 10Gi
+    osdcount: 3
+    domain: rook.example.com
+  backup:
+    bucket: 
+    # password: 
+    b2accountid: 
+    b2accountkey:

@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      addons/backup: enabled
+      addons/backup: disabled
   repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
   chartName: helm-extra-deploy
   namespace: stash
@@ -27,16 +27,3 @@ spec:
             RESTIC_PASSWORD: {{ .Values.addons.backup.password }}
             B2_ACCOUNT_ID: {{ .Values.addons.backup.b2accountid }}
             B2_ACCOUNT_KEY: {{ .Values.addons.backup.b2accountkey }}
-      - apiVersion: stash.appscode.com/v1alpha1
-        kind: Repository
-        metadata:
-          name: backblaze
-        spec:
-          backend:
-            b2:
-              bucket: {{ .Values.addons.backup.bucket }}
-              prefix: stash
-            storageSecretName: b2-secret
-          usagePolicy:
-            allowedNamespaces:
-              from: All

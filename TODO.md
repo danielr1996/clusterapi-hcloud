@@ -1,6 +1,10 @@
 - addons
-    - loki / fluentd
+    - loki / fluentd / grafana tempo
 - replace kubeadm controlplane with a something that doesn't require provisioning machines with shell scripts
 - set resources for all pods
 
-- create hetzner projekt controller to watch crds and create projects of them, should be installad in management cluster
+- create hack/init script for backblaze buckets
+- allow multiple domains for builtin ingresses
+- allow enabling/disabled addons through values
+
+- update crun etc version

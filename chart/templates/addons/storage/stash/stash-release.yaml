@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      addons/backup: enabled
+      addons/backup: disabled
   repoURL: https://charts.appscode.com/stable/
   chartName: stash
   namespace: stash

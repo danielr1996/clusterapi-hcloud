@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      addons/backup: enabled
+      addons/backup: disabled
   repoURL: oci://ghcr.io/danielr1996
   chartName: appscode-license-populater-chart
   namespace: stash
