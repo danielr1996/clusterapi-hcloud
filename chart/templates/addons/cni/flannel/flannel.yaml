@@ -7,7 +7,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      cni: flannel
+      codes.danielrichter.clusterapi-hcloud.addons/cni.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/cni.type: "flannel"
   repoURL: https://flannel-io.github.io/flannel/
   chartName: flannel
   namespace: kube-system

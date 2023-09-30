@@ -1,1 +1,78 @@
-# TODO update
+#fullnameOverride: ""
+hcloud:
+  region: nbg1
+  #sshkeyname: 
+  #token: ""
+  worker:
+    image: ubuntu-22.04
+    type: cax31
+  controlplane:
+    image: ubuntu-22.04
+    type: cax11
+controlplane:
+  replicas: 1
+  #encryptionpassphrase: ""
+  version: "1.28.0"
+  crunversion: "1.8.7"
+  containerdversion: "1.7.3"
+machinedeployment:
+  replicas: 3
+  version: "1.28.0"
+  crunversion: "1.8.7" 
+  containerdversion: "1.7.3" 
+cluster:
+  # name: 
+addons:
+  ccm:
+    enabled: true
+    type: hetzner
+  cni:
+    enabled: true
+    type: flannel
+  csi:
+    enabled: false
+    type: hetzner
+    #config:
+     # hetzner:
+        # encryptionpassphrase: ""
+  ingresscontroller:
+    enabled: false
+    type: nginx
+    #loadbalancerdnsnames: []
+  certmanager:
+    enabled: false
+    type: certmanager
+    #config:
+      #certmanager:
+       # issueremail: ""
+  externaldns:
+    enabled: false
+    type: externaldns
+    #config:
+     # externaldns:
+        # cloudflaretoken: 
+        # txtownerid: 
+       # domainFilters: []
+  monitoring:
+    enabled: false
+    type: kubeprometheus
+  #  config:
+  #    kubeprometheus:
+  #      domains: []
+  #      username: "admin"
+  #      password: "admin"
+  storage:
+    enabled: false
+    type: rook
+   # config:
+   #   rook:
+   #     monsize: 10Gi
+   #     osdsize: 10Gi
+   #     osdcount: 3
+   #     domains: []
+  backup:
+    enabled: false
+    type: volsync
+    #config:
+    #  volsync: {}
+     # stash: {}

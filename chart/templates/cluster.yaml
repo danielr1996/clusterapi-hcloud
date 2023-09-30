@@ -4,13 +4,25 @@ metadata:
   name: {{ include "hcloud-clusterapi.fullname" . }}
   labels:
     {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
-    ccm: hetzner
-    csi: hetzner
-    cni: flannel
-    monitoring: enabled
-    ingresscontroller: enabled
-    addons/rook: enabled
-    addons/backup: enabled
+    codes.danielrichter.clusterapi-hcloud.addons/ccm.enabled: {{ .Values.addons.ccm.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/ccm.type: {{ .Values.addons.ccm.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/cni.enabled: {{ .Values.addons.cni.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/cni.type: {{ .Values.addons.cni.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/csi.enabled: {{ .Values.addons.csi.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/csi.type: {{ .Values.addons.csi.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/ingresscontroller.enabled: {{ .Values.addons.ingresscontroller.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/ingresscontroller.type: {{ .Values.addons.ingresscontroller.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/certmanager.enabled: {{ .Values.addons.certmanager.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/certmanager.type: {{ .Values.addons.certmanager.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/externaldns.enabled: {{ .Values.addons.externaldns.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/externaldns.type: {{ .Values.addons.externaldns.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/storage.enabled: {{ .Values.addons.storage.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/storage.type: {{ .Values.addons.storage.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/monitoring.enabled: {{ .Values.addons.monitoring.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/monitoring.type: {{ .Values.addons.monitoring.type }}
+    codes.danielrichter.clusterapi-hcloud.addons/backup.enabled: {{ .Values.addons.backup.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/backup.type: {{ .Values.addons.backup.type }}
+    
 spec:
   clusterNetwork:
     pods:

@@ -1,20 +1,22 @@
+{{ with .Values.addons.csi.config }}
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
 metadata:
   name: hcloud-csi
   labels:
-    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
 spec:
   clusterSelector:
     matchLabels:
-      csi: hetzner
-  repoURL: https://charts.syself.com
-  chartName: csi-hcloud
+      codes.danielrichter.clusterapi-hcloud.addons/csi.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/csi.type: "hetzner"
+  repoURL: https://charts.hetzner.cloud
+  chartName: hcloud-csi
   namespace: kube-system
   options:
     install:
       createNamespace: true
-  version: "1.0.1"
+  version: "2.5.1"
   releaseName: hcloud-csi
   valuesTemplate: |
     fullnameOverride: hetzner-csi
@@ -24,7 +26,7 @@ spec:
       reclaimPolicy: Delete
       allowVolumeExpansion: true
     controller:
-      hcloudVolumeDefaultLocation: fsn1
+      hcloudVolumeDefaultLocation: {{ $.Values.hcloud.region }}
       priorityClassName: system-cluster-critical
       resources:
         csiAttacher:
@@ -73,14 +75,8 @@ spec:
                 - controller
             topologyKey: "kubernetes.io/hostname"
       hcloudToken:
-        value: {{ .Values.hcloud.token }}
-      image:
-        hcloudCSIDriver:
-          tag: v2.3.2
+        value: {{ $.Values.hcloud.token }}
     node:
-      image:
-        hcloudCSIDriver:
-          tag: v2.3.2
       priorityClassName: "system-node-critical"
       resources:
         CSINodeDriverRegistrar:
@@ -118,6 +114,27 @@ spec:
                 operator: NotIn
                 values:
                 - "true"
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: csi-extra
+  labels:
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      codes.danielrichter.clusterapi-hcloud.addons/csi.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/csi.type: "hetzner"
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: kube-system
+  options:
+    install:
+      createNamespace: true
+  version: "1.0.0"
+  releaseName: csi-extra
+  valuesTemplate: |
     extraDeploy:
       - |
         apiVersion: v1
@@ -126,7 +143,7 @@ spec:
           name: encryption-secret
           namespace: kube-system
         stringData:
-          encryption-passphrase: {{ .Values.hcloud.csi.encryptionpassphrase }}
+          encryption-passphrase: {{ .hetzner.encryptionpassphrase }}
       - |
         apiVersion: storage.k8s.io/v1
         kind: StorageClass
@@ -139,3 +156,4 @@ spec:
         parameters:
           csi.storage.k8s.io/node-publish-secret-name: encryption-secret
           csi.storage.k8s.io/node-publish-secret-namespace: kube-system
+{{ end }}

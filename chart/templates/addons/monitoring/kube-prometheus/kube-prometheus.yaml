@@ -7,7 +7,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      monitoring: enabled
+      codes.danielrichter.clusterapi-hcloud.addons/monitoring.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/monitoring.type: "kubeprometheus"
   repoURL: oci://registry-1.docker.io/bitnamicharts
   chartName: kube-prometheus
   namespace: monitoring

@@ -1,13 +1,15 @@
+{{ with .Values.addons.ingresscontroller.config }}
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
 metadata:
   name: ingress-nginx
   labels:
-    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
 spec:
   clusterSelector:
     matchLabels:
-      ingresscontroller: enabled
+      codes.danielrichter.clusterapi-hcloud.addons/ingresscontroller.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/ingresscontroller.type: nginx
   repoURL: https://kubernetes.github.io/ingress-nginx
   chartName: ingress-nginx
   namespace: ingress-system
@@ -31,8 +33,9 @@ spec:
       service:
         externalTrafficPolicy: Cluster
         annotations:
-          load-balancer.hetzner.cloud/location: {{ .Values.hcloud.region }}
-          external-dns.alpha.kubernetes.io/hostname: {{ .Values.ingress.loadbalancerdnsname }}
+          load-balancer.hetzner.cloud/location: {{ $.Values.hcloud.region }}
+          external-dns.alpha.kubernetes.io/hostname: {{ index .nginx.domains 0 }}
       ingressClassResource:
         name: 'nginx'
         default: true
+{{ end }}

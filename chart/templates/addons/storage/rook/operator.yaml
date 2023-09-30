@@ -7,7 +7,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      addons/rook: enabled
+      codes.danielrichter.clusterapi-hcloud.addons/storage.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/storage.type: "rook"
   repoURL: https://charts.rook.io/release
   chartName: rook-ceph
   namespace: rook-ceph 

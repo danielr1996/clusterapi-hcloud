@@ -7,7 +7,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      addons/rook: enabled
+      codes.danielrichter.clusterapi-hcloud.addons/storage.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/storage.type: "rook"
   repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
   chartName: helm-extra-deploy
   namespace: rook-ceph

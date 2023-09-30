@@ -7,7 +7,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      ccm: hetzner
+      codes.danielrichter.clusterapi-hcloud.addons/ccm.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/ccm.type: "hetzner"
   repoURL: https://charts.hetzner.cloud
   chartName: hcloud-cloud-controller-manager
   namespace: kube-system
@@ -28,7 +29,8 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      ccm: hetzner
+      codes.danielrichter.clusterapi-hcloud.addons/ccm.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/ccm.type: "hetzner"
   repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
   chartName: helm-extra-deploy
   namespace: kube-system

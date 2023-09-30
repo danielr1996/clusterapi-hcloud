@@ -1,13 +1,15 @@
+{{ with .Values.addons.externaldns.config }}
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
 metadata:
   name: external-dns
   labels:
-    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
 spec:
   clusterSelector:
     matchLabels:
-      ingresscontroller: enabled
+      codes.danielrichter.clusterapi-hcloud.addons/externaldns.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/externaldns.type: "externaldns"
   repoURL: https://kubernetes-sigs.github.io/external-dns/
   chartName: external-dns
   namespace: ingress-system
@@ -20,15 +22,15 @@ spec:
     fullnameOverride: external-dns
     env:
       - name: CF_API_TOKEN
-        value: {{ .Values.ingress.cloudflaretoken}}
+        value: {{ .externaldns.cloudflaretoken }}
     sources: ['ingress','service']
     domainFilters:
-      {{- range .Values.ingress.domainFilters }}
+      {{- range .externaldns.domainFilters }}
       - {{ . | quote }}
       {{- end }}
     provider: cloudflare
     loglevel: debug
-    txtOwnerId: {{ .Values.ingress.txtownerid }}
+    txtOwnerId: {{ .externaldns.txtownerid }}
     policy: sync
     interval: 15s
     resources:
@@ -38,3 +40,4 @@ spec:
       requests:
         memory: 50Mi
         cpu: 10m
+{{ end }}
