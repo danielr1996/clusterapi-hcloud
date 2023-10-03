@@ -1,0 +1,29 @@
+{{ with .Values.addons.backup.config }}
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: pvcbackup
+  labels:
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      codes.danielrichter.clusterapi-hcloud.addons/backup.enabled: "true"
+      codes.danielrichter.clusterapi-hcloud.addons/backup.type: "pvcbackup"
+  repoURL: oci://ghcr.io/danielr1996
+  chartName: pvc-backup-chart
+  namespace: backup
+  version: "0.1.0"
+  releaseName: backup
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    secrets:
+    - name: backblaze
+      data:
+        BUCKET: {{ .pvcbackup.BUCKET | quote }}
+        AWS_ACCESS_KEY_ID: {{ .pvcbackup.AWS_ACCESS_KEY_ID | quote }}
+        AWS_SECRET_ACCESS_KEY: {{ .pvcbackup.AWS_SECRET_ACCESS_KEY | quote }}
+        RESTIC_PASSWORD: {{ .pvcbackup.RESTIC_PASSWORD | quote }}
+{{ end }}
