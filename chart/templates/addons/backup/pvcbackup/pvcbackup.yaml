@@ -1,3 +1,4 @@
+{{ if eq .Values.addons.backup.type "pvcbackup" }}
 {{ with .Values.addons.backup.config }}
 apiVersion: addons.cluster.x-k8s.io/v1alpha1
 kind: HelmChartProxy
@@ -26,4 +27,5 @@ spec:
         AWS_ACCESS_KEY_ID: {{ .pvcbackup.AWS_ACCESS_KEY_ID | quote }}
         AWS_SECRET_ACCESS_KEY: {{ .pvcbackup.AWS_SECRET_ACCESS_KEY | quote }}
         RESTIC_PASSWORD: {{ .pvcbackup.RESTIC_PASSWORD | quote }}
+{{ end }}
 {{ end }}

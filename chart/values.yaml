@@ -1,8 +1,7 @@
-#fullnameOverride: ""
 hcloud:
   region: nbg1
-  #sshkeyname: 
-  #token: ""
+  sshkeyname: key
+  token: "FILLME"
   worker:
     image: ubuntu-22.04
     type: cax31
@@ -11,7 +10,8 @@ hcloud:
     type: cax11
 controlplane:
   replicas: 1
-  #encryptionpassphrase: ""
+  # head -c 32 /dev/urandom | base64
+  encryptionpassphrase: "FILLME"
   version: "1.28.0"
   crunversion: "1.8.7"
   containerdversion: "1.7.3"
@@ -21,7 +21,7 @@ machinedeployment:
   crunversion: "1.8.7" 
   containerdversion: "1.7.3" 
 cluster:
-  # name: 
+  name: "FILLME"
 addons:
   ccm:
     enabled: true
@@ -30,49 +30,55 @@ addons:
     enabled: true
     type: flannel
   csi:
-    enabled: false
+    enabled: true
     type: hetzner
-    #config:
-     # hetzner:
-        # encryptionpassphrase: ""
+    config:
+      hetzner:
+        # head -c 32 /dev/urandom | base64
+        encryptionpassphrase: "FILLME"
   ingresscontroller:
     enabled: false
     type: nginx
-    #loadbalancerdnsnames: []
+    config:
+      nginx:
+        domains:
+          - "example.com"
   certmanager:
     enabled: false
     type: certmanager
-    #config:
-      #certmanager:
-       # issueremail: ""
+    config:
+      certmanager:
+        issueremail: notify@example.com
   externaldns:
     enabled: false
     type: externaldns
-    #config:
-     # externaldns:
-        # cloudflaretoken: 
-        # txtownerid: 
-       # domainFilters: []
+    config:
+      externaldns:
+        cloudflaretoken: "FILLME"
+        txtownerid: exmaplecom
+        domainFilters:
+          - 'example.com'
   monitoring:
     enabled: false
     type: kubeprometheus
-  #  config:
-  #    kubeprometheus:
-  #      domains: []
-  #      username: "admin"
-  #      password: "admin"
+    config:
+      kubeprometheus:
+        domains:
+          - grafana.example.com
+        username: admin
+        password: "FILLME"
   storage:
-    enabled: false
-    type: rook
-   # config:
-   #   rook:
-   #     monsize: 10Gi
-   #     osdsize: 10Gi
-   #     osdcount: 3
-   #     domains: []
+    longhorn:
+      enabled: false
+      username: admin
+      # openssl passwd -stdin -apr1
+      password: "$apr1$BrNeduMV$2N6FwqUqPzjeBbz2ZPiVg0" #password
+      hostnames:
+        - longhorn.example.com
   backup:
-    enabled: false
-    type: volsync
-    #config:
-    #  volsync: {}
-     # stash: {}
+    longhorn:
+      enabled: false
+      backupTarget: "FILLME"
+      accesskey: "FILLME"
+      accesskeyid: "FILLME"
+      awsendpoint: "FILLME"

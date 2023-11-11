@@ -3,9 +3,8 @@ kind: MachineDeployment
 metadata:
   labels:
     nodepool: {{ include "hcloud-clusterapi.fullname" . }}-md
-  name: {{ include "hcloud-clusterapi.fullname" . }}
-  labels:
     {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
+  name: {{ include "hcloud-clusterapi.fullname" . }}
 spec:
   clusterName: {{ .Values.cluster.name }}
   replicas: {{ .Values.machinedeployment.replicas }}

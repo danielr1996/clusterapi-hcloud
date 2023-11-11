@@ -3,7 +3,8 @@ dke-*.yaml
 test.yaml
 dist/
 temp/
-tools/backblaze.ini
+hack/backblaze.ini
 drc-test.yaml
 common.values.yaml
 danielrichtercodes-test.yaml
+.idea/

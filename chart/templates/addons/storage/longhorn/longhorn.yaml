@@ -1,0 +1,38 @@
+{{ with .Values.addons.storage.longhorn }}
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: longhorn
+  labels:
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      codes.danielrichter.clusterapi-hcloud.addons/storage.longhorn.enabled: "true"
+  repoURL: https://charts.longhorn.io
+  chartName: longhorn
+  namespace: longhorn-system
+  options:
+    install:
+      createNamespace: true
+  version: "1.5.2"
+  releaseName: longhorn
+  valuesTemplate: |
+    ingress:
+      enabled: true
+      tls: true
+      host: {{ index .hostnames 0 }}
+      tlsSecret: {{ index .hostnames 0 }}
+      annotations:
+        cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+        nginx.ingress.kubernetes.io/auth-type: 'basic'
+        nginx.ingress.kubernetes.io/auth-secret: 'longhorn-basic-auth-secret'
+        nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+        nginx.ingress.kubernetes.io/proxy-body-size: '10000m'
+    defaultSettings:
+      createDefaultDiskLabeledNodes: false
+      {{ if $.Values.addons.backup.longhorn.enabled }}
+      backupTarget: {{ $.Values.addons.backup.longhorn.backupTarget }}
+      backupTargetCredentialSecret: longhorn-backuptarget
+      {{ end }}
+{{ end }}

@@ -3,7 +3,6 @@ kind: Cluster
 metadata:
   name: {{ include "hcloud-clusterapi.fullname" . }}
   labels:
-    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
     codes.danielrichter.clusterapi-hcloud.addons/ccm.enabled: {{ .Values.addons.ccm.enabled | quote }}
     codes.danielrichter.clusterapi-hcloud.addons/ccm.type: {{ .Values.addons.ccm.type }}
     codes.danielrichter.clusterapi-hcloud.addons/cni.enabled: {{ .Values.addons.cni.enabled | quote }}
@@ -16,13 +15,11 @@ metadata:
     codes.danielrichter.clusterapi-hcloud.addons/certmanager.type: {{ .Values.addons.certmanager.type }}
     codes.danielrichter.clusterapi-hcloud.addons/externaldns.enabled: {{ .Values.addons.externaldns.enabled | quote }}
     codes.danielrichter.clusterapi-hcloud.addons/externaldns.type: {{ .Values.addons.externaldns.type }}
-    codes.danielrichter.clusterapi-hcloud.addons/storage.enabled: {{ .Values.addons.storage.enabled | quote }}
-    codes.danielrichter.clusterapi-hcloud.addons/storage.type: {{ .Values.addons.storage.type }}
     codes.danielrichter.clusterapi-hcloud.addons/monitoring.enabled: {{ .Values.addons.monitoring.enabled | quote }}
     codes.danielrichter.clusterapi-hcloud.addons/monitoring.type: {{ .Values.addons.monitoring.type }}
-    codes.danielrichter.clusterapi-hcloud.addons/backup.enabled: {{ .Values.addons.backup.enabled | quote }}
-    codes.danielrichter.clusterapi-hcloud.addons/backup.type: {{ .Values.addons.backup.type }}
-    
+    codes.danielrichter.clusterapi-hcloud.addons/storage.longhorn.enabled: {{ .Values.addons.storage.longhorn.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/backup.longhorn.enabled: {{ .Values.addons.backup.longhorn.enabled | quote }}
+    {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
   clusterNetwork:
     pods:

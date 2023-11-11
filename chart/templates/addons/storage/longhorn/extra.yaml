@@ -1,0 +1,29 @@
+{{ with .Values.addons.storage.longhorn }}
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: longhorn-extra
+  labels:
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      codes.danielrichter.clusterapi-hcloud.addons/storage.longhorn.enabled: "true"
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: longhorn-system
+  version: "1.0.0"
+  releaseName: longhorn-extra
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+        - apiVersion: v1
+          kind: Secret
+          metadata:
+            name: longhorn-basic-auth-secret
+          type: Opaque
+          stringData:
+            auth: "{{ .username }}:{{ .password }}"
+  {{ end }}
