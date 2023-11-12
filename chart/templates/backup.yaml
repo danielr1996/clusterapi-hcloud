@@ -1,0 +1,11 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ .Release.Name}}
+  namespace: velero
+spec:
+  schedule: '*/10 * * * *'
+  template:
+    includedNamespaces:
+      - {{ .Release.Namespace}}
+  useOwnerReferencesInBackup: false
