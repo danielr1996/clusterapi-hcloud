@@ -19,6 +19,7 @@ metadata:
     codes.danielrichter.clusterapi-hcloud.addons/monitoring.type: {{ .Values.addons.monitoring.type }}
     codes.danielrichter.clusterapi-hcloud.addons/storage.longhorn.enabled: {{ .Values.addons.storage.longhorn.enabled | quote }}
     codes.danielrichter.clusterapi-hcloud.addons/backup.longhorn.enabled: {{ .Values.addons.backup.longhorn.enabled | quote }}
+    codes.danielrichter.clusterapi-hcloud.addons/gitops.flux.enabled: {{ .Values.addons.gitops.flux.enabled | quote }}
     {{- include "hcloud-clusterapi.labels" . | nindent 4 }}
 spec:
   clusterNetwork:

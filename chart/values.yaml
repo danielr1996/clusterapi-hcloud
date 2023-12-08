@@ -82,3 +82,9 @@ addons:
       accesskey: "FILLME"
       accesskeyid: "FILLME"
       awsendpoint: "FILLME"
+  gitops:
+    flux:
+      enabled: false
+      repository: "FILLME"
+      username: "FILLME"
+      pat: "FILLME"
