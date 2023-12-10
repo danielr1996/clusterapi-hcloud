@@ -35,4 +35,36 @@ spec:
         - secretName: {{ index .hostnames 0 }}
           hosts:
             - {{ index .hostnames 0 }}
+---
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: weave-extra
+  labels:
+    {{- include "hcloud-clusterapi.labels" $ | nindent 4 }}
+spec:
+  clusterSelector:
+    matchLabels:
+      codes.danielrichter.clusterapi-hcloud.addons/storage.longhorn.enabled: "true"
+  repoURL: oci://ghcr.io/danielr1996/helm-extra-deploy
+  chartName: helm-extra-deploy
+  namespace: flux-system
+  version: "1.0.0"
+  releaseName: weave-extra
+  options:
+    install:
+      createNamespace: true
+  valuesTemplate: |
+    extraDeploy:
+        - apiVersion: linkbee.danielrichter.codes/v1alpha
+          kind: DashboardEntry
+          metadata:
+            name: weave
+          spec:
+            title: Weave GitOps
+            description: Flux Dashboard
+            url: https://gitops.danielrichter.codes
+            icon:
+              location: https://www.weave.works/assets/favicon/favicon_300px.png
+              external: true
 {{ end }}

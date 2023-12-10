@@ -128,4 +128,14 @@ spec:
           matchLabels:
             dashboards: grafana
         gzipJson: H4sIAOAK9WQAA+1ZUW/bNhB+z6/Q+DAkQ1zYbtLMA/qQZdjWbUmLddkwJIZASWeZMEVqJJXU8bLfviMty5JNuU6Rdshqo2gg3iceed/H0x042wvwR6gQ0lDDpNDkm2DmBp2BM21w5Koasb9Z48nhooJx80ogtHe4bk2ooVoWKobG7A2MmebWSlJFR1RQsj6NgxUssahOJ/hhDgw6HbIGvfcsAgSNuHVhVAEe+5glG6wsluJMcqmsd5VGdL97GPR7Pfzv+Pgw6B14FkwEzdyeTpfhDb4MTjkoo314Q1UKpj1GnGXMmnvdbkt4Mmri8amYImhEufbspHSUWqKvhm32koyE6nEkqUq2C/F7XruvnoZ7tSkIJMyscUNGTMeU/wlUvcW4mHMpzBgR5c6tTvLxb1Jyw/LasJNHv3zgTEzq+8SBG7iQt83okJwK4Loh8yYB7xNwtfFcyQzMGAovvaV2T04Gg7hLB50IjpPO0YuvjzrRoDvo0JMj/AdRvw+wErjDleWAjhXLraDshCu+MHLAkzMpRiz1LzeBES240e1Ki0up+80Okkl3XogZK9BjyRO9LhLP4pfv0zxnYrMOMyaW3K5Za563WimNtOSFgZbc4rDaQN6Ugu/X7qyaaBFBFCqA2OCyeuOG8sKuUxScb0Tft1qHD2KgEC6boBziaGrAw5/vkMsbUApz5Zy4jTpNEfdG+tkh9jAPPPPb09nrewzv/FIgNtl1N66jnhSW+8jXv3eVMWE653R6XionoprFviONAv2d3f0ILB3PE3Mr5g+W1PNXcymKgZh/IKy3MT7fYbqj3OdSQVLE8HrD6h0Mc2e8WciEU20upLlAvfmPbtuxdAlGe1JPhXBa1os8u5Wu8CTfXmLO4hyS8kuwkdScFylGFpQuwzZ41nv2YjUXzj+p/kC0RG6LamU+9TZJv0J/cPJv2X81sf16SrVQamz/tiHf5S4j6SLbnxQRhALBoUbhFTqMaU5jZqYzzKlu8y+vSQaZVNNrcn/Qefg7wVeBFPsWfhCkShZ5yGFk9pXkOLCcyj1ftyVIwiEFkXwvFVY2du1npcs2vKIibS/j5hAYvXJcnG6V8D57leQyCWObjpgAFS6oDl0xqv1yaeezrLI3FaerlP/iHD0G4d/uCPchtyRcwV+Y0z8J5b+Wrh6D9LMd6T5kjfQl13M6w0LTFEJXE84q4xdI96MTfWk9PQbL33lYbowMVwsDZlzHSc7dnoNLwzi7m9dgq9CS3AhrCVqkNU5qPOw6xo/eMWKfwjLqOnVPfzB3sWsqm2/8Z01lLNWT6Ci9hi1byue7lnIFsmspvWv/LMqIrdrDOC8e1k/OX9g1kw739PWxdTNZCmXXSf4P2fZ1kh+D710b+SkZV9SAS9EhchlqQOITHRqJRcfMVssv/7kmhQb1t55iQZwh21e9bHjguzl1cz/NdvLszeUH9pJ7tXntSmwfYqHHCxEQHY8ho8v65PnJwmCmvLx5VZMFenHJW3kgP+OZVAKqq56FM2QDS1ODjRPx3v43r2sNy5oyJiOUq/Uu5G2nn9S2TIwsx8naFDmLJ+A6xvooFqlQqwJrceUFqkYtxkvtv+5qcfHT5O3dYvymCs5xOXILMHE3yBafoSbplOzd/wvKRUSE+SAAAA==
+    - apiVersion: linkbee.danielrichter.codes/v1alpha
+      kind: DashboardEntry
+      metadata:
+        name: grafana
+      spec:
+        title: Grafana
+        description: Grafana
+        url: https://grafana.prod.danielrichter.codes
+        icon:
+          location: /public/img/apple-touch-icon.png
 {{ end }}

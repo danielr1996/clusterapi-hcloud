@@ -26,4 +26,15 @@ spec:
           type: Opaque
           stringData:
             auth: "{{ .username }}:{{ .password }}"
+        - apiVersion: linkbee.danielrichter.codes/v1alpha
+          kind: DashboardEntry
+          metadata:
+            name: longhorn
+          spec:
+            title: Longhorn
+            description: Longhorn Dashboard
+            url: https://longhorn.prod.danielrichter.codes
+            icon:
+              location: https://longhorn.io/favicon.png
+              external: true
   {{ end }}
