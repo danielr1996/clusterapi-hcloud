@@ -22,34 +22,33 @@ spec:
       - apiVersion: source.toolkit.fluxcd.io/v1
         kind: GitRepository
         metadata:
-          name: flux-repo
+          name: "{{ .repository.name }}"
           namespace: flux-system
         spec:
           interval: 1m0s
           ref:
             branch: main
           secretRef:
-            name: flux-pat
-          url: "{{ .repository }}"
+            name: "{{ .repository.name }}-pat"
+          url: "{{ .repository.url }}"
       - apiVersion: v1
         kind: Secret
         metadata:
-          name: flux-pat
+          name: "{{ .repository.name }}-pat"
           namespace: flux-system
         stringData:
-          username: "{{ .username }}"
-          password: "{{ .pat }}"
+          username: "{{ .secret.username }}"
+          password: "{{ .secret.pat }}"
       - apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
-          name: flux-kustomization
+          name: "{{ .repository.name }}"
           namespace: flux-system
         spec:
           interval: 1m
-          targetNamespace: flux-system
           sourceRef:
             kind: GitRepository
-            name: flux-repo
+            name: "{{ .repository.name }}"
           path: "./values"
           prune: true
           timeout: 1m

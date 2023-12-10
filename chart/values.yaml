@@ -85,6 +85,16 @@ addons:
   gitops:
     flux:
       enabled: false
-      repository: "FILLME"
+      repository:
+        name: "FILLME"
+        url: "FILLME"
+      secret:
+        username: "FILLME"
+        pat: "FILLME"
+    weave:
+      enabled: false
       username: "FILLME"
-      pat: "FILLME"
+      # bcrypt hashed password, can be done with `gitops get bcrypt-hash` if the weave gitops cli is installed
+      password: "FILLME"
+      hostnames:
+        - gitops.example.com
